@@ -63,10 +63,10 @@ if db_engine == "mysql":
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.mysql",
-            "NAME": os.getenv("MYSQL_DATABASE", "resume_matcher"),
+            "NAME": os.getenv("MYSQL_DATABASE", "railway"),
             "USER": os.getenv("MYSQL_USER", "root"),
-            "PASSWORD": os.getenv("MYSQL_PASSWORD", ""),
-            "HOST": os.getenv("MYSQL_HOST", "127.0.0.1"),
+            "PASSWORD": os.getenv("MYSQL_PASSWORD", "xiUZYkhXKMZPGeHpsvNdUDMUssHlOHOZ"),
+            "HOST": os.getenv("MYSQL_HOST", "mysql.railway.internal"),
             "PORT": os.getenv("MYSQL_PORT", "3306"),
             "OPTIONS": {
                 "charset": "utf8mb4",
@@ -78,6 +78,7 @@ else:
     sqlite_path = os.getenv("SQLITE_PATH", "").strip()
     sqlite_name = Path(sqlite_path) if sqlite_path else BASE_DIR / "db.sqlite3"
     sqlite_name.parent.mkdir(parents=True, exist_ok=True)
+    
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
