@@ -1,0 +1,73 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}AI Resume Analyzer & Job Matcher{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        document.documentElement.dataset.theme = localStorage.getItem("resume-analyzer-theme") || "light";
+    </script>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <header class="site-header">
+        <nav class="nav-shell">
+            <a class="brand" href="{% url 'home' %}">
+                <span class="brand-mark">AR</span>
+                <span>Resume Analyzer</span>
+            </a>
+            <button class="nav-toggle" type="button" aria-label="Toggle navigation" data-nav-toggle>
+                <i data-lucide="menu"></i>
+            </button>
+            <div class="nav-links" data-nav-links>
+                <a href="{% url 'home' %}">Home</a>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'upload_resume' %}">Analyze</a>
+                    <a href="{% url 'profile' %}">Profile</a>
+                    <form class="logout-form" method="post" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button class="button button-ghost" type="submit">
+                            <i data-lucide="log-out"></i>
+                            Logout
+                        </button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'login' %}">Login</a>
+                    <a class="button button-small" href="{% url 'register' %}">
+                        <i data-lucide="user-plus"></i>
+                        Sign up
+                    </a>
+                {% endif %}
+                <button class="theme-toggle" type="button" aria-label="Toggle dark mode" data-theme-toggle>
+                    <i data-lucide="moon"></i>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    {% if messages %}
+        <div class="message-stack" aria-live="polite">
+            {% for message in messages %}
+                <div class="message message-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="site-footer">
+        <span>AI Resume Analyzer & Job Matcher</span>
+        <span>Built with HTML,CSS,JS, Django with AI Integration.</span>
+    </footer>
+
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

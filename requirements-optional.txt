@@ -1,0 +1,8 @@
+# Optional fallback PDF parser.
+# Install this on Python 3.12 if you want a second parser after pdfplumber.
+PyMuPDF==1.24.9
+
+# Optional stronger NLP stack for local Python 3.12 environments.
+spacy==3.7.5
+scikit-learn==1.5.1
+numpy==1.26.4

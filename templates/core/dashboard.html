@@ -1,0 +1,207 @@
+{% extends "base.html" %}
+
+{% block title %}Analysis Dashboard | Resume Analyzer{% endblock %}
+
+{% block content %}
+{{ chart_payload|json_script:"skills-chart-data" }}
+{{ quality_payload|json_script:"quality-chart-data" }}
+
+<section class="dashboard-shell">
+    <div class="dashboard-heading">
+        <div>
+            <p class="eyebrow">Analysis dashboard</p>
+            <h1>{{ result.job_description.title }}</h1>
+            {% if result.job_description.company %}
+                <p>{{ result.job_description.company }}</p>
+            {% endif %}
+        </div>
+        <a class="button button-secondary" href="{% url 'upload_resume' %}">
+            <i data-lucide="plus"></i>
+            New analysis
+        </a>
+    </div>
+
+    <div class="score-grid">
+        <article class="score-card">
+            <div class="score-ring" data-score="{{ result.ats_score }}" style="--score: {{ result.ats_score }}%">
+                <span data-score-value>{{ result.ats_score }}</span>
+            </div>
+            <h2>ATS Score</h2>
+            <p>Skills, keywords, similarity, and resume quality.</p>
+        </article>
+        <article class="score-card">
+            <div class="score-ring teal" data-score="{{ result.match_score }}" style="--score: {{ result.match_score }}%">
+                <span data-score-value>{{ result.match_score }}</span>
+            </div>
+            <h2>Job Match</h2>
+            <p>How closely the resume aligns with this role.</p>
+        </article>
+        <article class="metric-card">
+            <i data-lucide="brain"></i>
+            <span>{{ result.similarity_score|floatformat:2 }}</span>
+            <p>Semantic similarity</p>
+        </article>
+        <article class="metric-card">
+            <i data-lucide="timer"></i>
+            <span>{{ result.resume.experience_years }}</span>
+            <p>Detected years</p>
+        </article>
+    </div>
+
+    <div class="dashboard-grid">
+        <section class="dashboard-panel">
+            <div class="panel-heading">
+                <i data-lucide="pie-chart"></i>
+                <h2>Skills Coverage</h2>
+            </div>
+            <canvas id="skillsChart" height="240"></canvas>
+        </section>
+
+        <section class="dashboard-panel">
+            <div class="panel-heading">
+                <i data-lucide="activity"></i>
+                <h2>Score Breakdown</h2>
+            </div>
+            <canvas id="qualityChart" height="240"></canvas>
+        </section>
+    </div>
+
+    <div class="dashboard-grid">
+        <section class="dashboard-panel">
+            <div class="panel-heading">
+                <i data-lucide="check-circle-2"></i>
+                <h2>Matched Skills</h2>
+            </div>
+            <div class="chip-list">
+                {% for skill in result.matched_skills %}
+                    <span class="chip good">{{ skill }}</span>
+                {% empty %}
+                    <span class="empty-state">No matched skills detected yet.</span>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section class="dashboard-panel">
+            <div class="panel-heading">
+                <i data-lucide="alert-triangle"></i>
+                <h2>Missing Skills</h2>
+            </div>
+            <div class="chip-list">
+                {% for skill in result.missing_skills %}
+                    <span class="chip warn">{{ skill }}</span>
+                {% empty %}
+                    <span class="empty-state">No critical missing skills found.</span>
+                {% endfor %}
+            </div>
+        </section>
+    </div>
+
+    <section class="coach-workspace">
+        <div class="dashboard-panel resume-marker-panel">
+            <div class="panel-heading">
+                <i data-lucide="file-text"></i>
+                <h2>Resume Mistake Map</h2>
+            </div>
+            <p class="panel-subtitle">Left-side review of the exact resume areas to improve for this job.</p>
+            <div class="resume-mark-list">
+                {% for item in resume_review %}
+                    <article class="resume-mark severity-{{ item.severity }}">
+                        <div class="mark-header">
+                            <span>{{ forloop.counter }}</span>
+                            <strong>{{ item.label }}</strong>
+                        </div>
+                        <blockquote>{{ item.snippet }}</blockquote>
+                        <div class="mark-detail">
+                            <span>Why</span>
+                            <p>{{ item.reason }}</p>
+                        </div>
+                        <div class="mark-detail">
+                            <span>Change</span>
+                            <p>{{ item.suggestion }}</p>
+                        </div>
+                        <div class="rewrite-example">
+                            <i data-lucide="sparkles"></i>
+                            <p>{{ item.example }}</p>
+                        </div>
+                    </article>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="dashboard-panel ai-coach-panel">
+            <div class="panel-heading">
+                <i data-lucide="bot"></i>
+                <h2>AI Resume Coach</h2>
+            </div>
+            <p class="panel-subtitle">Ask how to update your resume for this specific role.</p>
+            <div class="coach-suggestions">
+                <button type="button" data-coach-prompt="How can I improve my ATS score?">Improve ATS score</button>
+                <button type="button" data-coach-prompt="Which missing skills should I add first?">Missing skills</button>
+                <button type="button" data-coach-prompt="Rewrite my weak bullets with examples.">Rewrite bullets</button>
+            </div>
+            <div class="coach-chat" data-coach-chat>
+                <article class="coach-message coach-message-ai">
+                    <i data-lucide="sparkles"></i>
+                    <p>Ask me what to change. I will use your resume, this job description, missing skills, and ATS score to suggest practical updates.</p>
+                </article>
+            </div>
+            <form class="coach-form" data-coach-form data-coach-url="{% url 'resume_coach_api' result.pk %}">
+                {% csrf_token %}
+                <label for="coach-question">Ask the AI coach</label>
+                <div class="coach-input-row">
+                    <input id="coach-question" name="question" type="text" placeholder="Example: What should I change first?">
+                    <button class="button" type="submit">
+                        <i data-lucide="send"></i>
+                        Ask
+                    </button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <section class="dashboard-panel">
+        <div class="panel-heading">
+            <i data-lucide="lightbulb"></i>
+            <h2>Recommendations</h2>
+        </div>
+        <div class="recommendation-list">
+            {% for suggestion in result.suggestions %}
+                <article class="recommendation-item">
+                    <i data-lucide="arrow-up-right"></i>
+                    <p>{{ suggestion }}</p>
+                </article>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section class="dashboard-panel">
+        <div class="panel-heading">
+            <i data-lucide="list-checks"></i>
+            <h2>Resume Quality Checks</h2>
+        </div>
+        <div class="quality-grid">
+            <div>
+                <span class="quality-label">Word count</span>
+                <strong>{{ result.quality_checks.word_count }}</strong>
+            </div>
+            <div>
+                <span class="quality-label">Bullet format</span>
+                <strong>{% if result.quality_checks.has_bullets %}Detected{% else %}Improve{% endif %}</strong>
+            </div>
+            {% for section, present in result.quality_checks.sections.items %}
+                <div>
+                    <span class="quality-label">{{ section|title }}</span>
+                    <strong>{% if present %}Present{% else %}Missing{% endif %}</strong>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    window.ResumeAnalyzerCharts.renderDashboard();
+</script>
+{% endblock %}

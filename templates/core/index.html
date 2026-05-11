@@ -1,0 +1,207 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}AI Resume Analyzer & Job Matcher{% endblock %}
+
+{% block content %}
+<section class="hero-section hero-home">
+    <div class="hero-content" data-reveal>
+        <p class="eyebrow">AI-powered resume intelligence</p>
+        <h1>AI Resume Analyzer & Job Matcher</h1>
+        <p class="hero-copy">
+            A polished full-stack AI project that turns resumes and job descriptions into ATS scores, missing skills, match insights, and a dashboard which can understand in seconds.
+        </p>
+        <div class="hero-actions">
+            {% if user.is_authenticated %}
+                <a class="button button-large" href="{% url 'upload_resume' %}">
+                    <i data-lucide="sparkles"></i>
+                    Analyze resume
+                </a>
+                {% if recent_result %}
+                    <a class="button button-secondary button-large" href="{% url 'analysis_dashboard' recent_result.pk %}">
+                        <i data-lucide="bar-chart-3"></i>
+                        Latest dashboard
+                    </a>
+                {% endif %}
+            {% else %}
+                <a class="button button-large" href="{% url 'register' %}">
+                    <i data-lucide="rocket"></i>
+                    Start free
+                </a>
+                <a class="button button-secondary button-large" href="{% url 'login' %}">
+                    <i data-lucide="log-in"></i>
+                    Login
+                </a>
+            {% endif %}
+        </div>
+        <div class="hero-proof">
+            <div>
+                <strong>PDF/DOCX</strong>
+                <span>Resume parsing</span>
+            </div>
+            <div>
+                <strong>ATS</strong>
+                <span>Scoring engine</span>
+            </div>
+            <div>
+                <strong>NLP</strong>
+                <span>Skill matching</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="hero-showcase" data-reveal>
+        <div class="scan-stage" aria-label="Animated resume analysis preview">
+            <div class="scan-beam"></div>
+            <div class="resume-sheet">
+                <div class="sheet-header">
+                    <span></span>
+                    <span></span>
+                </div>
+                <div class="sheet-line long"></div>
+                <div class="sheet-line medium"></div>
+                <div class="sheet-line short"></div>
+                <div class="skill-cloud">
+                    <span>Python</span>
+                    <span>Django</span>
+                    <span>REST API</span>
+                    <span>MySQL</span>
+                </div>
+            </div>
+
+            <div class="match-console">
+                <div class="console-top">
+                    <span>Live match</span>
+                    <strong>92%</strong>
+                </div>
+                <div class="console-meter">
+                    <span></span>
+                </div>
+                <div class="console-row">
+                    <i data-lucide="check-circle-2"></i>
+                    <span>Matched: Python, Django, APIs</span>
+                </div>
+                <div class="console-row warn">
+                    <i data-lucide="alert-circle"></i>
+                    <span>Missing: Docker, AWS</span>
+                </div>
+            </div>
+
+            <div class="floating-score">
+                <span>ATS</span>
+                <strong>86</strong>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="impact-band">
+    <div class="impact-grid" data-reveal>
+        <div class="impact-item">
+            <i data-lucide="file-search"></i>
+            <strong>Text extraction</strong>
+            <span>PDF, DOCX, TXT-ready pipeline</span>
+        </div>
+        <div class="impact-item">
+            <i data-lucide="target"></i>
+            <strong>Match scoring</strong>
+            <span>Skills, keywords, similarity</span>
+        </div>
+        <div class="impact-item">
+            <i data-lucide="lightbulb"></i>
+            <strong>AI suggestions</strong>
+            <span>Missing skills and better keywords</span>
+        </div>
+        <div class="impact-item">
+            <i data-lucide="layout-dashboard"></i>
+            <strong>Recruiter dashboard</strong>
+            <span>Cards, charts, and recommendations</span>
+        </div>
+    </div>
+</section>
+
+<section class="story-section">
+    <div class="section-heading" data-reveal>
+        <p class="eyebrow">Project flow</p>
+        <h2>From resume upload to job-match decision</h2>
+    </div>
+    <div class="workflow-line" data-reveal>
+        <article>
+            <span>01</span>
+            <i data-lucide="upload-cloud"></i>
+            <h3>Upload</h3>
+            <p>Resume and job description enter a clean Django workflow.</p>
+        </article>
+        <article>
+            <span>02</span>
+            <i data-lucide="scan-text"></i>
+            <h3>Extract</h3>
+            <p>Text, skills, education, experience, and keywords are parsed.</p>
+        </article>
+        <article>
+            <span>03</span>
+            <i data-lucide="brain"></i>
+            <h3>Analyze</h3>
+            <p>NLP scoring compares the resume against the job role.</p>
+        </article>
+        <article>
+            <span>04</span>
+            <i data-lucide="bar-chart-3"></i>
+            <h3>Improve</h3>
+            <p>The dashboard turns the score into clear next steps.</p>
+        </article>
+    </div>
+</section>
+
+<section class="feature-band home-feature-band">
+    <div class="section-heading" data-reveal>
+        <p class="eyebrow">NOTE</p>
+        <h2>Built like a real product, not a classroom demo</h2>
+    </div>
+    <div class="feature-grid">
+        <article class="feature-card" data-reveal>
+            <i data-lucide="shield-check"></i>
+            <h3>AI Resume Intelligence</h3>
+            <p>Extracts skills, experience, projects, and keywords using NLP-based resume parsing and semantic analysis.</p>
+        </article>
+        <article class="feature-card" data-reveal>
+            <i data-lucide="database"></i>
+            <h3>ATS Match Scoring</h3>
+            <p>Compares resumes with job descriptions and generates ATS compatibility scores with missing skill insights.</p>
+        </article>
+        <article class="feature-card" data-reveal>
+            <i data-lucide="sparkles"></i>
+            <h3>Smart Skill Gap Detection</h3>
+            <p>Identifies missing technologies, weak keywords, and improvement areas to increase interview chances.</p>
+        </article>
+        <article class="feature-card" data-reveal>
+            <i data-lucide="smartphone"></i>
+            <h3>Interactive Analytics Dashboard</h3>
+            <p>Visualizes resume strength, match percentage, keyword coverage, and recruiter-focused insights in real time.</p>
+        </article>
+    </div>
+</section>
+
+<section class="tech-runway" data-reveal>
+    <div class="runway-track">
+        <span>Django</span>
+        <span>Python</span>
+        <span>MySQL</span>
+        <span>spaCy</span>
+        <span>scikit-learn</span>
+        <span>HTML</span>
+        <span>Chart.js</span>
+        <span>REACT JS</span>
+        <span>CSS</span>
+        <span>Django</span>
+        <span>Python</span>
+        <span>MySQL</span>
+        <span>spaCy</span>
+        <span>SPRING</span>
+        <span>FLASK</span>
+        <span>Chart.js</span>
+        <span>JAVA</span>
+        <span>JAVASCRIPT</span>
+    </div>
+</section>
+{% endblock %}

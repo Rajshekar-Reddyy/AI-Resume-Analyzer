@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Login | Resume Analyzer{% endblock %}
+
+{% block content %}
+<section class="auth-layout">
+    <div class="auth-panel">
+        <p class="eyebrow">Welcome back</p>
+        <h1>Login</h1>
+        <form class="form-stack" method="post">
+            {% csrf_token %}
+            {% if form.non_field_errors %}
+                <div class="form-errors">{{ form.non_field_errors }}</div>
+            {% endif %}
+            <label for="{{ form.username.id_for_label }}">Username</label>
+            {{ form.username }}
+            <label for="{{ form.password.id_for_label }}">Password</label>
+            {{ form.password }}
+            <button class="button button-large" type="submit">
+                <i data-lucide="log-in"></i>
+                Login
+            </button>
+        </form>
+        <p class="auth-switch">New here? <a href="{% url 'register' %}">Create an account</a></p>
+    </div>
+</section>
+{% endblock %}

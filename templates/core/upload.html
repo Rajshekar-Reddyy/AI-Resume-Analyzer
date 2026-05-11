@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}Analyze Resume | Resume Analyzer{% endblock %}
+
+{% block content %}
+<section class="page-shell">
+    <div class="page-heading compact">
+        <p class="eyebrow">Resume analysis</p>
+        <h1>Upload resume and job description</h1>
+    </div>
+
+    <form class="analyze-layout" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% if form.non_field_errors %}
+            <div class="form-errors full-width">{{ form.non_field_errors }}</div>
+        {% endif %}
+
+        <section class="upload-panel">
+            <div class="panel-heading">
+                <i data-lucide="file-up"></i>
+                <h2>Resume</h2>
+            </div>
+            <label for="{{ form.resume_file.id_for_label }}">{{ form.resume_file.label }}</label>
+            <div class="dropzone" data-dropzone>
+                <i data-lucide="upload-cloud"></i>
+                <strong>Drop your resume here</strong>
+                <span>PDF or DOCX, up to 5 MB</span>
+                {{ form.resume_file }}
+                <button class="button button-secondary button-small" type="button" data-file-trigger>
+                    <i data-lucide="folder-open"></i>
+                    Browse file
+                </button>
+                <p class="file-name" data-file-name>No file selected</p>
+            </div>
+            {% if form.resume_file.errors %}
+                <div class="field-error">{{ form.resume_file.errors }}</div>
+            {% endif %}
+        </section>
+
+        <section class="upload-panel">
+            <div class="panel-heading">
+                <i data-lucide="briefcase-business"></i>
+                <h2>Job role</h2>
+            </div>
+            <div class="form-grid">
+                <div class="field-group">
+                    <label for="{{ form.job_title.id_for_label }}">Job title</label>
+                    {{ form.job_title }}
+                    {% if form.job_title.errors %}<div class="field-error">{{ form.job_title.errors }}</div>{% endif %}
+                </div>
+                <div class="field-group">
+                    <label for="{{ form.company.id_for_label }}">Company</label>
+                    {{ form.company }}
+                    {% if form.company.errors %}<div class="field-error">{{ form.company.errors }}</div>{% endif %}
+                </div>
+            </div>
+            <label for="{{ form.job_description.id_for_label }}">Job description</label>
+            {{ form.job_description }}
+            {% if form.job_description.errors %}
+                <div class="field-error">{{ form.job_description.errors }}</div>
+            {% endif %}
+            <label for="{{ form.job_description_file.id_for_label }}">Upload job description</label>
+            <div class="dropzone compact" data-dropzone>
+                <i data-lucide="file-text"></i>
+                <strong>Drop job description file</strong>
+                <span>Optional PDF, DOCX, or TXT</span>
+                {{ form.job_description_file }}
+                <button class="button button-secondary button-small" type="button" data-file-trigger>
+                    <i data-lucide="folder-open"></i>
+                    Browse file
+                </button>
+                <p class="file-name" data-file-name>No file selected</p>
+            </div>
+            {% if form.job_description_file.errors %}
+                <div class="field-error">{{ form.job_description_file.errors }}</div>
+            {% endif %}
+        </section>
+
+        <button class="button button-large analyze-button" type="submit">
+            <i data-lucide="sparkles"></i>
+            Analyze match
+        </button>
+    </form>
+</section>
+{% endblock %}

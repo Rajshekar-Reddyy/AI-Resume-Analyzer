@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Register | Resume Analyzer{% endblock %}
+
+{% block content %}
+<section class="auth-layout">
+    <div class="auth-panel wide">
+        <p class="eyebrow">Create account</p>
+        <h1>Start analyzing resumes</h1>
+        <form class="form-grid" method="post">
+            {% csrf_token %}
+            {% if form.non_field_errors %}
+                <div class="form-errors full-width">{{ form.non_field_errors }}</div>
+            {% endif %}
+            {% for field in form %}
+                <div class="field-group {% if field.name == 'username' or field.name == 'email' or field.name == 'password1' or field.name == 'password2' %}full-width{% endif %}">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <div class="field-error">{{ field.errors }}</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            <button class="button button-large full-width" type="submit">
+                <i data-lucide="user-plus"></i>
+                Create account
+            </button>
+        </form>
+        <p class="auth-switch">Already have an account? <a href="{% url 'login' %}">Login</a></p>
+    </div>
+</section>
+{% endblock %}
