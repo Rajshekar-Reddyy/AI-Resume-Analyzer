@@ -131,9 +131,10 @@ LOGIN_REDIRECT_URL = "upload_resume"
 LOGOUT_REDIRECT_URL = "home"
 
 CSRF_TRUSTED_ORIGINS = [
-    origin.strip()
-    for origin in os.getenv("CSRF_TRUSTED_ORIGINS", "").split(",")
-    if origin.strip()
+    # origin.strip()
+    # for origin in os.getenv("CSRF_TRUSTED_ORIGINS", "").split(",")
+    # if origin.strip()
+    "https://web-production-1da83.up.railway.app",
 ]
 
 if not DEBUG:
