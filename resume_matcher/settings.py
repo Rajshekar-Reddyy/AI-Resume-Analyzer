@@ -11,9 +11,10 @@ SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-dev-key-change-me")
 DEBUG = os.getenv("DEBUG", "True").lower() == "true"
 
 ALLOWED_HOSTS = [
-    host.strip()
-    for host in os.getenv("ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
-    if host.strip()
+    "*"
+    # host.strip()
+    # for host in os.getenv("ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
+    # if host.strip()
 ]
 
 INSTALLED_APPS = [
