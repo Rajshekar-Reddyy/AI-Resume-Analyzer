@@ -1,6 +1,7 @@
+                                                                     
 # 🚀 AI Resume Analyzer & Job Matcher
 
-An AI-powered web application that analyzes resumes, extracts skills using NLP techniques, calculates ATS scores, and matches resumes with job descriptions to provide personalized improvement suggestions.
+An AI-powered web application that analyzes resumes, extracts skills using NLP techniques, calculates ATS scores, and matches resumes with job descriptions to provide personalized improvement suggestions..
 
 🌐 Live Demo: https://web-production-1da83.up.railway.app
 
